@@ -1,7 +1,7 @@
 package external;
 
 public class GeoHash {
-
+//convert coordinates to a string
 	    private static final String BASE_32 = "0123456789bcdefghjkmnpqrstuvwxyz";
 
 	    private static int divideRangeByValue(double value, double[] range) {

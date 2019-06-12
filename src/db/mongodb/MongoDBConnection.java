@@ -94,7 +94,7 @@ public class MongoDBConnection implements DBConnection{
 					builder.setRating(doc.getDouble("rating"));
 					builder.setAddress(doc.getString("address"));
 					builder.setLatitude(doc.getDouble("latitude"));
-					builder.setLongtitude(doc.getDouble("longtitude"));
+					builder.setLongitude(doc.getDouble("longitude"));
 					builder.setDescription(doc.getString("description"));
 					builder.setSnippet(doc.getString("snippet"));
 					builder.setSnippetUrl(doc.getString("snippet_url"));
@@ -150,7 +150,7 @@ public class MongoDBConnection implements DBConnection{
 						.append("rating", item.getRating())
 						.append("address", item.getAddress())
 						.append("latitude", item.getLatitude())
-						.append("longtitude", item.getLongtitude())
+						.append("longitude", item.getLongitude())
 						.append("description", item.getDescription())
 						.append("snippet", item.getSnippet())
 						.append("snippet_url", item.getSnippetUrl())
@@ -170,5 +170,17 @@ public class MongoDBConnection implements DBConnection{
 	public boolean verifyLogin(String userId, String password) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean contains(String userId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void addUser(String userId, String password, String firstname, String lastname) {
+		// TODO Auto-generated method stub
+		
 	}
 }

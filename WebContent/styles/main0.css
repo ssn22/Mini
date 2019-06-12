@@ -22,7 +22,6 @@ ul {
 .top-header {
   position:    fixed;
   align-items: center;
-  color:white;
   background:  #0593D3;
   box-shadow:  0px 2px 10px #333333;
   display:     flex;
@@ -53,6 +52,49 @@ ul {
   text-decoration: none;
 }
 
+/**
+ * main container
+ */
+.container {
+  margin:    60px auto;
+  max-width: 80%;
+  min-width: 500px;
+}
+
+/**
+ * main header
+ */
+.container > header {
+  align-items:     center;
+  background:      url('http://prophoto.com.cy/wp-content/galleries/food/food-restaurant-photographer-cyprus-10.jpg') no-repeat 50% 50%;
+  background-size: 100%;
+  display:         flex;
+  height:          250px;
+}
+
+.container > header p {
+  border-left:  1px solid #FFFFFF;
+  font-weight:  400;
+  font-size:    2em;
+  line-height:  1em;
+  margin-left:  220px;
+  padding-left: 5px;
+}
+
+.container > header span {
+  color: #FBAF41;
+}
+
+/**
+ * main section
+ */
+.main-section {
+  background: #0593D3;
+}
+
+/**
+ * aside
+ */
 #item-nav {
   display: block;
   float: left;
@@ -91,67 +133,6 @@ ul {
   width: 20px;
 }
 
-#top-user {
-  display:flex;
-  margin-left:auto;
-}
-#logout-link{
-  color:white;
-  padding:20px;
-}
-#welcome-msg {
-  color:white;
-  position:relative;
-  padding:20px;
-
-}
-#avatar {
-  padding:20px;
-}
-
-/**
- * main container
- */
-.container {
-  margin:    60px auto;
-  max-width: 80%;
-  min-width: 500px;
-}
-
-/**
- * main header
- */
-.container > header {
-  align-items:     center;
-  background-size: 100%;
-  display:         flex;
-  height:          120px;
-}
-
-.container > header p {
-  border-left:  1px solid #FFFFFF;
-  font-weight:  400;
-  font-size:    2em;
-  line-height:  1em;
-  margin-left:  220px;
-  padding-left: 5px;
-}
-
-.container > header span {
-  color: #FBAF41;
-}
-
-/**
- * main section
- */
-.main-section {
-  background: #0593D3;
-}
-
-/**
- * aside
- */
-
 /**
  * item list
  */
@@ -164,7 +145,6 @@ ul {
   min-height:  250px;
   padding:     10px;
   width:72%;
-  overflow: auto;
 }
 
 
@@ -286,17 +266,15 @@ footer ul li {
 }
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-.form-page {
-   background:  #E1E1E1;
-  color:       #624630;
-  display:     table;
-  list-style:  none;
-  margin:auto;
-  min-height:  250px;
-  padding:     10px;
-  width:72%;
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
 }
 .form {
+  position: relative;
+  z-index: 1;
   background: #FFFFFF;
   max-width: 360px;
   margin: 0 auto 100px;
@@ -319,7 +297,7 @@ footer ul li {
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #0593D3;
+  background: #4CAF50;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -330,7 +308,7 @@ footer ul li {
   cursor: pointer;
 }
 .form button:hover,.form button:active,.form button:focus {
-  background: #0079b0;
+  background: #43A047;
 }
 .form .message {
   margin: 15px 0 0;
@@ -338,10 +316,52 @@ footer ul li {
   font-size: 12px;
 }
 .form .message a {
-  color: #0593D3;
+  color: #4CAF50;
   text-decoration: none;
 }
 .form .register-form {
   display: none;
 }
-
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}
+body {
+  background: #76b852; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+  background: -moz-linear-gradient(right, #76b852, #8DC26F);
+  background: -o-linear-gradient(right, #76b852, #8DC26F);
+  background: linear-gradient(to left, #76b852, #8DC26F);
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;      
+}

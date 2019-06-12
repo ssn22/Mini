@@ -89,7 +89,7 @@ public class MySQLConnection implements DBConnection{
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, userId);
 			ResultSet rs = statement.executeQuery();
-			
+			//select all favor items for userId and add the itemId to result.
 			while (rs.next()) {
 				String itemId = rs.getString("item_id");
 				itemIds.add(itemId);
@@ -124,12 +124,13 @@ public class MySQLConnection implements DBConnection{
 					builder.setRating(rs.getDouble("rating"));
 					builder.setAddress(rs.getString("address"));
 					builder.setLatitude(rs.getDouble("latitude"));
-					builder.setLongtitude(rs.getDouble("longtitude"));
+					builder.setLongitude(rs.getDouble("longitude"));
 					builder.setDescription(rs.getString("description"));
 					builder.setSnippet(rs.getString("snippet"));
 					builder.setSnippetUrl(rs.getString("snippet_url"));
 					builder.setImageUrl(rs.getString("image_url"));
 					builder.setUrl(rs.getString("url"));
+					builder.setDate(rs.getString("date"));
 				}
 				Set<String> categories = getCategories(itemId);
 				builder.setCategories(categories);
@@ -175,7 +176,7 @@ public class MySQLConnection implements DBConnection{
 			return;
 		}
 		try {
-			String sql = "INSERT IGNORE INTO items VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "INSERT IGNORE INTO items VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, item.getItemId());
 			statement.setString(2, item.getName());
@@ -186,12 +187,13 @@ public class MySQLConnection implements DBConnection{
 			statement.setDouble(7, item.getRating());
 			statement.setString(8, item.getAddress());
 			statement.setDouble(9, item.getLatitude());
-			statement.setDouble(10, item.getLongtitude());
+			statement.setDouble(10, item.getLongitude());
 			statement.setString(11, item.getDescription());
 			statement.setString(12, item.getSnippet());
 			statement.setString(13, item.getSnippetUrl());
 			statement.setString(14, item.getImageUrl());
 			statement.setString(15, item.getUrl());
+			statement.setString(16, item.getDate());
 			statement.execute();
 			// update categories table for each category
 			sql = "INSERT IGNORE INTO categories VALUES (?,?)";
@@ -219,7 +221,7 @@ public class MySQLConnection implements DBConnection{
 			statement.setString(1, userId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				name += String.join("", rs.getString("first_name"), rs.getString("last_name"));
+				name += String.join(" ", rs.getString("first_name"), rs.getString("last_name"));
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -252,5 +254,39 @@ public class MySQLConnection implements DBConnection{
 		}
 		return instance;
 	}
-
+	@Override
+	public boolean contains(String userId) {//check if the userId exists
+		if (conn == null) {
+			return false;
+		}
+		try {
+			String sql = "SELECT user_id from users WHERE user_id=?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			ResultSet rs = statement.executeQuery();//read from db
+			if (rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return false;
+	}
+	@Override
+	public void addUser(String userId, String password, String firstname, String lastname) {//add a new user
+		if (conn == null) {
+			return;
+		}
+		try {
+			String sql = "INSERT IGNORE INTO users VALUES (?,?,?,?)";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			statement.setString(2, password);
+			statement.setString(3, firstname);
+			statement.setString(4, lastname);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

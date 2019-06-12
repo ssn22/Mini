@@ -22,4 +22,6 @@ public interface DBConnection {
 	public void saveItem(Item item);// save to database
 	public String getFullname(String userId);
 	public boolean verifyLogin(String userId, String password);
+	public boolean contains(String userId);//check if the userId exists
+	public void addUser(String userId, String password, String firstname, String lastname);//add a new user
 }

@@ -16,14 +16,17 @@ public class Item {
 	private String state;
 	private String zipcode;
 	private double latitude;
-	private double longtitude;
+	private double longitude;
 	private String description;
 	private Set<String> categories;
 	private String imageUrl;
 	private String url;
 	private String snippet;
 	private String snippetUrl;
+	private String date;
 	
+	
+
 	public static class ItemBuilder {
 		private String itemId;
 		private String name;
@@ -34,13 +37,18 @@ public class Item {
 		private String state;
 		private String zipcode;
 		private double latitude;
-		private double longtitude;
+		private double longitude;
 		private String description;
 		private Set<String> categories;
 		private String imageUrl;
 		private String url;
 		private String snippet;
 		private String snippetUrl;
+		private String date;
+		public ItemBuilder setDate(String date) {
+			this.date = date;
+			return this;
+		}
 		public ItemBuilder setAddress(String address) {
 			this.address = address;
 			return this;
@@ -77,8 +85,8 @@ public class Item {
 			this.latitude = latitude;
 			return this;
 		}
-		public ItemBuilder setLongtitude(double longtitude) {
-			this.longtitude = longtitude;
+		public ItemBuilder setLongitude(double longitude) {
+			this.longitude = longitude;
 			return this;
 		}
 		public ItemBuilder setDescription(String description) {
@@ -121,13 +129,14 @@ public class Item {
 		this.state = builder.state;
 		this.zipcode = builder.zipcode;
 		this.latitude = builder.latitude;
-		this.longtitude = builder.longtitude;
+		this.longitude = builder.longitude;
 		this.description = builder.description;
 		this.imageUrl = builder.imageUrl;
 		this.url = builder.url;
 		this.snippet = builder.snippet;
 		this.snippetUrl = builder.snippetUrl;
-		this.categories = builder.categories;	
+		this.categories = builder.categories;
+		this.date = builder.date;
 	}
 	@Override
 	public int hashCode() {
@@ -151,6 +160,13 @@ public class Item {
 		} else if (!itemId.equals(other.itemId))
 			return false;
 		return true;
+	}
+	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 	public String getItemId() {
 		return itemId;
@@ -206,11 +222,11 @@ public class Item {
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	public double getLongtitude() {
-		return longtitude;
+	public double getLongitude() {
+		return longitude;
 	}
-	public void setLongtitude(double longtitude) {
-		this.longtitude = longtitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 	public String getDescription() {
 		return description;
@@ -261,13 +277,14 @@ public class Item {
 			obj.put("state", state);
 			obj.put("zipcode", zipcode);
 			obj.put("latitude", latitude);
-			obj.put("longtitude", longtitude);
+			obj.put("longitude", longitude);
 			obj.put("description", description);
 			obj.put("categories", new JSONArray(categories));
 			obj.put("image_url", imageUrl);
 			obj.put("url", url);
 			obj.put("snippet", snippet);
 			obj.put("snippet_url", snippetUrl);
+			obj.put("date", date);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

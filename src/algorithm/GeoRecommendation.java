@@ -16,7 +16,7 @@ public class GeoRecommendation {
 		DBConnection conn = DBConnectionFactory.getDBConnection();
 		Set<String> favoriteItems = conn.getFavoriteItemIds(userId);
 		Set<String> allCategories = new HashSet<>();
-		for (String item : favoriteItems) {//consider visited times
+		for (String item : favoriteItems) {//haven't consider visited times
 			allCategories.addAll(conn.getCategories(item));
 		}
 		allCategories.remove("Undefined");
@@ -25,23 +25,26 @@ public class GeoRecommendation {
 		}
 		Set<Item> recommendedItems = new HashSet<>();
 		for (String category : allCategories) {
-			List<Item> items = conn.searchItems(userId, lat, lon, category);//call external api
+			List<Item> items = conn.searchItems(userId, lat, lon, category);//from External api
 			recommendedItems.addAll(items);
 		}
-		
+		Set<String> titles = new HashSet<>();
 		List<Item> filteredItems = new ArrayList<>();
 		for (Item item : recommendedItems) {
-			if(!favoriteItems.contains(item.getItemId())) {
+			//filter visited ones and duplicate-name ones
+			if(!favoriteItems.contains(item.getItemId()) && !titles.contains(item.getName())) {
 				filteredItems.add(item);
+				titles.add(item.getName());
 			}
+			
 		}
 		
 		//perform ranking of these items based on distance
 		Collections.sort(filteredItems, new Comparator<Item>(){
 			@Override
 			public int compare(Item item1, Item item2) {//change to different order
-				double distance1 = getDistance(item1.getLatitude(),item1.getLongtitude(),lat,lon);
-				double distance2 = getDistance(item2.getLatitude(),item2.getLongtitude(),lat,lon);
+				double distance1 = getDistance(item1.getLatitude(),item1.getLongitude(),lat,lon);
+				double distance2 = getDistance(item2.getLatitude(),item2.getLongitude(),lat,lon);
 				return (int)(distance1-distance2);//return the increasing order of dist
 			}
 		});

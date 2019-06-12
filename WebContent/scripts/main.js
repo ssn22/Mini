@@ -12,12 +12,210 @@
 	 */
     function init() {
         // Register event listeners
+    	$('login-btn').addEventListener('click', login);//monitoring login button
+    	$('show-signin').addEventListener('click', showSignin);
+    	$('show-reg').addEventListener('click', showReg);
+    	$('reg-btn').addEventListener('click', register);
+    	$('logout-link').addEventListener('click', logout);
         $('nearby-btn').addEventListener('click', loadNearbyItems);
         $('fav-btn').addEventListener('click', loadFavoriteItems);
         $('recommend-btn').addEventListener('click', loadRecommendedItems);
 
-        initGeoLocation();
+       // initGeoLocation();
+      validateSession();
+        
+//        onSessionValid({
+//      	  user_id: '1111',
+//      	  name: 'John Smith'
+//        });
     }
+    //animation for the login form
+//    $('.message a').click(function(){
+//    	   $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+//    	});
+    
+    function showElement(ele) {
+    	ele.style.display = 'block';
+    }
+    function hideElement(ele) {
+    	ele.style.display = 'none';
+    }
+    
+    function showSignin(){
+    	var reg = $('register-form');
+    	var log = $('login-form');
+    	reg.style.display = 'none';
+    	log.style.display = 'block';
+    }
+    
+    function showReg(){
+    	var reg = $('register-form');
+    	var log = $('login-form');
+    	reg.style.display = 'block';
+    	log.style.display = 'none';
+    }
+    
+    /**
+     * Session
+     */
+    function validateSession() {
+      // The request parameters
+      var url = './login';
+      var req = JSON.stringify({});
+    	  
+      // display loading message
+      showLoadingMessage('Validating session...');
+
+      // make AJAX call
+      ajax('GET', url, req,
+        // session is still valid
+        function (res) {
+    	  var result = JSON.parse(res);
+
+    	  if (result.status === 'OK') {
+    		onSessionValid(result);
+    	  }
+        }
+      );
+    }
+
+    function onSessionValid(result) {//if the session is valid, show elements
+      user_id = result.user_id;
+      user_fullname = result.name;
+      var formPage = $('form-page');
+      var loginForm = $('login-form');
+      var regForm = $('register-form');
+      var topNav = $('top-nav');
+      var itemList = $('item-list');
+      var avatar = $('avatar');
+      var welcomeMsg = $('welcome-msg');
+      var logoutBtn = $('logout-link');
+      
+      welcomeMsg.innerHTML = 'Welcome, ' + user_fullname;
+
+      showElement(topNav);
+      showElement(itemList);
+      showElement(avatar);
+      showElement(welcomeMsg);
+      showElement(logoutBtn, 'inline-block');
+      hideElement(loginForm);
+      hideElement(regForm);
+      hideElement(formPage);
+
+      initGeoLocation();
+    }
+
+    function onSessionInvalid() {//if the session is invalid, hide elements
+      var loginForm = $('login-form');
+      var formPage = $('form-page');
+      //var regForm = $('reg-form');
+      var topNav = $('top-nav');
+      var itemList = $('item-list');
+      var avatar = $('avatar');
+      var welcomeMsg = $('welcome-msg');
+      var logoutBtn = $('logout-link');
+
+      hideElement(topNav);
+      hideElement(itemList);
+      hideElement(avatar);
+      hideElement(logoutBtn);
+      hideElement(welcomeMsg);
+      showElement(formPage);
+      showElement(loginForm); 
+    }
+    
+    //register
+    function register() {
+		var username = $('username2').value;
+		var password = $('password2').value;
+		password = md5(username + md5(password));
+		var firstname = $('firstname').value;
+		var lastname = $('lastname').value;
+
+		// The request parameters
+		var url = './register';
+		var params = 'user_id=' + username + '&password=' + password 
+		+ '&firstname=' + firstname + '&lastname=' + lastname;
+		var req = JSON.stringify({});
+
+		ajax('POST', url + '?' + params, req,
+		// successful callback
+		function(res) {
+			var result = JSON.parse(res);
+
+			// successfully registered
+			if (result.status === 'OK') {
+				onSessionValid(result);
+			} else if (result.status === 'Invalid') {
+				$('signup-error').innerHTML = 'Username has been registered.';
+			}
+		},
+		// error
+		function() {
+			showLoginError();
+		});
+	}
+    //logout function
+    function logout() {
+	// The request parameters
+		var url = './logout';
+		var params = '';
+		var req = JSON.stringify({});
+
+		ajax('GET', url + '?' + params, req,
+		// successful callback
+		function(res) {
+			var result = JSON.parse(res);
+
+			// successfully logged in
+			if (result.status === 'OK') {
+				validateSession(result);
+			}
+		},
+		// error
+		function() {
+			//logout unsuccessful
+		});
+	}
+
+    
+  //-----------------------------------
+//  Login
+//-----------------------------------
+
+	function login() {
+		var username = $('username').value;
+		var password = $('password').value;
+		password = md5(username + md5(password));
+
+		// The request parameters
+		var url = './login';
+		var params = 'user_id=' + username + '&password=' + password;
+		var req = JSON.stringify({});
+
+		ajax('POST', url + '?' + params, req,
+		// successful callback
+		function(res) {
+			var result = JSON.parse(res);
+
+			// successfully logged in
+			if (result.status === 'OK') {
+				onSessionValid(result);
+			}
+		},
+		// error
+		function() {
+			showLoginError();
+		});
+	}
+
+	function showLoginError() {
+		$('login-error').innerHTML = 'Invalid username or password';
+	}
+
+	function clearLoginError() {
+		$('login-error').innerHTML = '';
+	}
 
     function initGeoLocation() {
         if (navigator.geolocation) {
@@ -299,7 +497,7 @@
 		    var result = JSON.parse(res);
 		    if (result.result === 'SUCCESS') {
 		        li.dataset.favorite = favorite;
-		        favIcon.className = favorite ? 'fa fa-heart' : 'fa fa-heart-o';
+		        favIcon.className = favorite ? 'fa fa-heart fa-2x' : 'fa fa-heart-o fa-2x';
 		    }
 		});
     }
@@ -354,7 +552,7 @@
             }));
         } else {
             li.appendChild($('img', {
-                src: 'https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png'
+                src: 'images/fireworks.png'
             }))
         }
         // section
@@ -368,7 +566,22 @@
         });
         title.innerHTML = item.name;
         section.appendChild(title);
+        
+        //date
+        var date = $('p',{
+        	className: 'item-date'
+        });
+        date.innerHTML = item.date;
+        section.appendChild(date);
+     // address
+        var address = $('p', {
+            className: 'item-address'
+        });
 
+        address.innerHTML = item.address.replace(/\"/g,
+				'');
+        //li.appendChild(address);.replace(/,/g, '<br/>')
+        section.appendChild(address);
         // category
         var category = $('p', {
             className: 'item-category'
@@ -396,16 +609,6 @@
         section.appendChild(stars);
 
         li.appendChild(section);
-
-        // address
-        var address = $('p', {
-            className: 'item-address'
-        });
-
-        address.innerHTML = item.address.replace(/,/g, '<br/>').replace(/\"/g,
-				'');
-        li.appendChild(address);
-
         // favorite link
         var favLink = $('p', {
             className: 'fav-link'
@@ -417,7 +620,7 @@
 
         favLink.appendChild($('i', {
             id: 'fav-icon-' + item_id,
-            className: item.favorite ? 'fa fa-heart' : 'fa fa-heart-o'
+            className: item.favorite ? 'fa fa-heart fa-2x' : 'fa fa-heart-o fa-2x'
         }));
 
         li.appendChild(favLink);

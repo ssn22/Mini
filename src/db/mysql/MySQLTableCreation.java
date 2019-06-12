@@ -4,7 +4,7 @@ import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+//run this code manually only when you want to reset the database
 public class MySQLTableCreation {
 	public static void main(String[] args) {
 		try {
@@ -39,12 +39,12 @@ public class MySQLTableCreation {
 			stmt.executeUpdate(sql);
 			
 			//create new table
-			/*  CREATE TABLE items(item_id VARCHAR(255) NOT NULL,name VARCHAR(255),city VARCHAR(255),state VARCHAR(255),country VARCHAR(255),zipcode VARCHAR(255),rating FLOAT,address VARCHAR(255),latitude FLOAT,longtitude FLOAT,description VARCHAR(255),snippet VARCHAR(255),snippet_url VARCHAR(255),image_url VARCHAR(255),url VARCHAR(255),PRIMARY KEY(item_id));*/
+			/*  CREATE TABLE items(item_id VARCHAR(255) NOT NULL,name VARCHAR(255),city VARCHAR(255),state VARCHAR(255),country VARCHAR(255),zipcode VARCHAR(255),rating FLOAT,address VARCHAR(255),latitude FLOAT,longitude FLOAT,description VARCHAR(255),snippet VARCHAR(255),snippet_url VARCHAR(255),image_url VARCHAR(255),url VARCHAR(255),date VARCHAR(255),PRIMARY KEY(item_id));*/
 			sql = "CREATE TABLE items" + "(item_id VARCHAR(255) NOT NULL," + "name VARCHAR(255),"
 			+ "city VARCHAR(255)," + "state VARCHAR(255)," + "country VARCHAR(255)," + "zipcode VARCHAR(255),"
-					+ "rating FLOAT," + "address VARCHAR(255)," + "latitude FLOAT," + "longtitude FLOAT,"
+					+ "rating FLOAT," + "address VARCHAR(255)," + "latitude FLOAT," + "longitude FLOAT,"
 			+ "description VARCHAR(255)," + "snippet VARCHAR(255)," + "snippet_url VARCHAR(255),"
-					+ "image_url VARCHAR(255)," + "url VARCHAR(255)," + "PRIMARY KEY(item_id))";
+					+ "image_url VARCHAR(255)," + "url VARCHAR(255)," + "date VARCHAR(255)," + "PRIMARY KEY(item_id))";
 			stmt.executeUpdate(sql);
 			//CREATE TABLE categories(item_id VARCHAR(255) NOT NULL,category VARCHAR(255),PRIMARY KEY(item_id, category),FOREIGN KEY (item_id) REFERENCES items(item_id));
 			sql = "CREATE TABLE categories" + "(item_id VARCHAR(255) NOT NULL," + "category VARCHAR(255),"

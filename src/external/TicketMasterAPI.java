@@ -25,7 +25,7 @@ public class TicketMasterAPI implements ExternalAPI{
 	@Override
 	public List<Item> search(double lat, double lon, String term) {
 		String url = "http://" + API_HOST + SEARCH_PATH;
-		String geoHash = GeoHash.encodeGeohash(lat, lon, 4);//20km
+		String geoHash = GeoHash.encodeGeohash(lat, lon, 3);//+-78km
 		if (term == null) {
 			term = DEFAULT_TERM;
 		}
@@ -86,10 +86,10 @@ public class TicketMasterAPI implements ExternalAPI{
 		return;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		TicketMasterAPI tmApi = new TicketMasterAPI();
 		tmApi.queryAPI(37.38, -122.08);
-	}
+	}*/
 	
 	private List<Item> getItemList(JSONArray events) throws JSONException {
 		List<Item> itemList = new ArrayList<>();
@@ -134,9 +134,11 @@ public class TicketMasterAPI implements ExternalAPI{
 				if (!venue.isNull("location")) {
 					JSONObject location = venue.getJSONObject("location");
 					builder.setLatitude(getNumericFieldOrNull(location, "latitude"));
-					builder.setLongtitude(getNumericFieldOrNull(location, "longtitude"));
+					builder.setLongitude(getNumericFieldOrNull(location, "longitude"));
 				}
 			}
+			JSONObject startDate = getDate(event);
+			builder.setDate(getStringFieldOrNull(startDate, "localDate"));
 			Item item = builder.build();
 			itemList.add(item);
 		}	
@@ -155,6 +157,18 @@ public class TicketMasterAPI implements ExternalAPI{
 		}
 		return null;
 	}
+	
+	private JSONObject getDate(JSONObject event) throws JSONException {
+		if(!event.isNull("dates")) {
+			JSONObject dates = event.getJSONObject("dates");
+			if(!dates.isNull("start")) {
+				JSONObject start = dates.getJSONObject("start");
+				return start;
+			}
+		}
+		return null;
+	}
+	
 	
 	private String getImageUrl(JSONObject event) throws JSONException {
 		if (!event.isNull("images")) {

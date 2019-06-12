@@ -3,6 +3,7 @@ package rpc;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,18 +56,22 @@ public class SearchItem extends HttpServlet {
 		
 		List<JSONObject> list = new ArrayList<>();
 		Set<String> favorite = conn.getFavoriteItemIds(userId);
+		Set<String> titles = new HashSet<>();
 		try {
 			for (Item item : items) {
-				JSONObject obj = item.toJSONObject();
-				if (favorite != null) {
-					obj.put("favorite", favorite.contains(item.getItemId()));
+				if(!titles.contains(item.getName())) {//filter those with same name but different time
+					titles.add(item.getName());
+					JSONObject obj = item.toJSONObject();
+					if (favorite != null) {
+						obj.put("favorite", favorite.contains(item.getItemId()));
+					}
+					list.add(obj);
 				}
-				list.add(obj);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JSONArray array = new JSONArray(items);
+		JSONArray array = new JSONArray(list);//items or list?
 		RpcHelper.writeJsonArray(response, array);
 	/*	response.setContentType("application/json");
 		response.addHeader("Access-Control-Allow-Origin", "*");
